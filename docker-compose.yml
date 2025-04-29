@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  juice-shop:
+    image: bkimminich/juice-shop 
+    container_name: juice-shop
+    hostname: juice-shop
+    ports:
+      - 3000:3000
+
+  vulnerable-app:
+    build: 
+      context: .
+      network: host
+    container_name: vulnerable-app
+    hostname: vulnerable-app
+    network_mode: host
+    ports:
+      - 8000:8000
