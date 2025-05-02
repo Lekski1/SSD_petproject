@@ -2,70 +2,20 @@ version: "3.8"
 
 services:
   # Juice Shop instances
-  juice-shop1:
+  juice-shop:
     image: bkimminich/juice-shop
-    container_name: juice-shop1
-    hostname: juice-shop1
+    container_name: juice-shop
+    hostname: juice-shop
     networks:
       - juice-shop-net
     expose:
       - 3000
 
-  juice-shop2:
-    image: bkimminich/juice-shop
-    container_name: juice-shop2
-    hostname: juice-shop2
-    networks:
-      - juice-shop-net
-    expose:
-      - 3000
-
-  juice-shop3:
-    image: bkimminich/juice-shop
-    container_name: juice-shop3
-    hostname: juice-shop3
-    networks:
-      - juice-shop-net
-    expose:
-      - 3000
-
-  # Vulnerable App instances
-  vulnerable-app1:
-    build:
-      context: .
-      network: host
-    # image: prepared image
-    container_name: vulnerable-app1
-    hostname: vulnerable-app1
-    network_mode: host
-    # networks:
-    #   - vulnerable-app-net
-    expose:
-      - 8000
-
-  vulnerable-app2:
-    build:
-      context: .
-      network: host
-    # image: prepared image  
-    container_name: vulnerable-app2
-    hostname: vulnerable-app2
-    network_mode: host
-    # networks:
-    #   - vulnerable-app-net
-    expose:
-      - 8000
-
-  vulnerable-app3:
-    build:
-      context: .
-      network: host
-    # image: prepared image  
-    container_name: vulnerable-app3
-    hostname: vulnerable-app3
-    network_mode: host
-    # networks:
-    #   - vulnerable-app-net
+  # Vulnerable App instances (now using your Docker Hub image)
+  vulnerable-app:
+    image: lekski/ssd_petproject:latest
+    container_name: vulnerable-app
+    hostname: vulnerable-app
     expose:
       - 8000
 
@@ -78,9 +28,7 @@ services:
     volumes:
       - ./nginx/juice-shop.conf:/etc/nginx/nginx.conf
     depends_on:
-      - juice-shop1
-      - juice-shop2
-      - juice-shop3
+      - juice-shop
     networks:
       - juice-shop-net
 
@@ -92,13 +40,7 @@ services:
     volumes:
       - ./nginx/vulnerable-app.conf:/etc/nginx/nginx.conf
     depends_on:
-      - vulnerable-app1
-      - vulnerable-app2
-      - vulnerable-app3
-    network_mode: host
-    # networks:
-    #   - vulnerable-app-net
+      - vulnerable-app
 
 networks:
   juice-shop-net:
-  # vulnerable-app-net:
