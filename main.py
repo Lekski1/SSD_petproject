@@ -13,7 +13,12 @@ async def lifespan(app: FastAPI):
     init_db()
     yield
 
-app = FastAPI(title="SSD our api", lifespan=lifespan)
+app = FastAPI(title="SSD our api", 
+              lifespan=lifespan, 
+              root_path="/vulnerable-app", 
+              docs_url="/docs", 
+              openapi_url="/openapi.json"
+        )
 
 app.include_router(sql_router)
 # app.include_router(xss_router)
@@ -22,4 +27,4 @@ app.include_router(ssrf_router)
 app.include_router(xxe)
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
