@@ -8,7 +8,7 @@ def search_user(username: str):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    vuln_query = f"SELECT * FROM users WHERE username = '{username}'"
+    vuln_query = f'SELECT * FROM users WHERE username = "{username}"'
     rows = cursor.execute(vuln_query).fetchall()
     conn.close()
     return {"sql injection": rows}
