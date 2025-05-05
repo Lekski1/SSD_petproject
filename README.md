@@ -63,7 +63,7 @@
     *  Внедренные уязвимости соответствующими участниками команды: 
         *   XSS (Cross-Site Scripting) - Артем Булгаков
         *   Server-Side Request Forgery (SSRF) - Александр Рябов
-        *   DDOS - Руслан Бельков
+        *   Path Traversal - Руслан Бельков
         *   XXE (XML External Entity) - Михаил Воронин
         *   SQL-инъекция - Эльдар Маметов
 

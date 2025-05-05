@@ -4,7 +4,7 @@ import uvicorn
 from fastapi import FastAPI
 
 from database import init_db
-from routers.csrf import router as csrf_router
+from routers.path_traversal import router as path_traversal_router
 from routers.sql_injection import router as sql_router
 from routers.ssrf import router as ssrf_router
 from routers.xss import router as xss_router
@@ -26,7 +26,7 @@ app = FastAPI(title="SSD our api",
 app.include_router(sql_router)
 app.include_router(xss_router)
 app.include_router(ssrf_router)
-app.include_router(csrf_router)
+app.include_router(path_traversal_router)
 app.include_router(xxe)
 
 if __name__ == "__main__":
