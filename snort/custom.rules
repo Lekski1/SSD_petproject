@@ -25,3 +25,4 @@ drop tcp any any -> $HOME_NET any (msg:"XSS blocked"; content:"GET"; http_method
 
 # Path Traversal
 drop tcp any any -> $HOME_NET any (msg:"PATH_TRAVERSAL - Directory traversal attempt"; flow:to_server; content:"GET"; http_method; content:"/path_traversal/view"; http_uri; content:"file="; pcre:"/file=[^&]*(\.\.\/|\.\.\\|%2e%2e)/i"; sid:1000160; rev:1; metadata:service http;)
+drop tcp any any -> $HOME_NET any (msg:"PATH_TRAVERSAL - Directory traversal attempt - Literal .. and Encoded Slash"; flow:to_server; content:"GET"; http_method; content:"/path_traversal/view"; http_uri; content:"file="; http_uri; pcre:"/file=[^&]*\.\.(?:%2f|%5c)/i"; sid:1000161; rev:1; metadata:service http;)
