@@ -28,82 +28,85 @@
 
 ---
 
-## Table of Contents (Содержание)
+## Table of Contents
 
 - [Snort IDS/IPS System | SA Team](#snort-idsips-system--sa-team)
-  - [Table of Contents (Содержание)](#table-of-contents-содержание)
-  - [Введение (Introduction)](#введение-introduction)
-  - [Методы (Methods)](#методы-methods)
-  - [Результаты (Results)](#результаты-results)
-  - [Обсуждение (Discussion)](#обсуждение-discussion)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Methods](#methods)
+  - [Results](#results)
+  - [Discussion](#discussion)
 
 ---
 
-## Введение (Introduction)
+## Introduction
 
-**Цель проекта:**
-В рамках данного проекта реализуется задача развертывания и настройки системы обнаружения/предотвращения вторжений (IDS/IPS) Snort или Suricata перед веб-приложением. Проект включает следующие ключевые этапы, основанные на требованиях учебного курса:
+**Project Objective:**
+This project implements the task of deploying and configuring a Snort or Suricata intrusion detection/intrusion prevention system (IDS/IPS) in front of a web application. The project includes the following key steps based on the requirements of the training course:
 
-*   Развертывание Snort IDS/IPS системы.
-*   Применение адекватной конфигурации безопасности, с кастомизацией минимум 3 настроек.
-*   Моделирование атаки на веб-приложение.
-*   Детектирование и/или предотвращение смоделированной атаки с помощью IDS/IPS.
+* Deploying the Snort IDS/IPS system.
+* Applying an adequate security configuration, with customization of at least 3 settings.
+* Simulating an attack on a web application.
+* Detecting and/or preventing the simulated attack using IDS/IPS.
 
-**Выбор Инструмента (Snort V2):**    
-В качестве IDS/IPS был выбран Snort версии 2. Он был выбран по следующим причинам:        
-*   Наличие у части команды предыдущего опыта работы с Snort V2, что ускоряет процесс развертывания и начальной настройки.
-*   Относительная простота установки и конфигурации по сравнению с более новой версией.
-*   Избытачность функционала Snort V3. Snort второй версии имеет весь необходимый функционал для выполнения проекта. 
+**Selection of Tool (Snort V2):**    
+Snort version 2 was selected as the IDS/IPS. It was chosen for the following reasons:        
+* Having some of the team have previous experience with Snort V2, which speeds up the deployment and initial configuration process.
+* Relative ease of installation and configuration compared to the newer version.
+* Redundancy of Snort V3 functionality. Snort version 2 has all the functionality needed to complete the project. 
 
-## Методы (Methods)
+## Methods
 
-Для реализации проекта мы использовали vps сервер на котором и развернули все необходимые компоненты для тестирования нашего проекта 
+To implement the project, we used a vps server on which we deployed all the necessary components for testing our project 
 
-1.  **Разработка целевого веб-приложения на FastAPI:**
-    *   Было разработано простое веб-приложение на фреймворке FastAPI.
-    *   Каждый участник реализовал определенный Endpoint, намеренно содержащий специфическую уязвимость.
-    *  Внедренные уязвимости соответствующими участниками команды: 
-        *   XSS (Cross-Site Scripting) - Артем Булгаков
-        *   Server-Side Request Forgery (SSRF) - Александр Рябов
-        *   Path Traversal - Руслан Бельков
-        *   XXE (XML External Entity) - Михаил Воронин
-        *   SQL-инъекция - Эльдар Маметов
+1.  **Development of target web application on FastAPI:**
+    * A simple web application on FastAPI framework was developed.
+    * Each participant implemented a specific Endpoint intentionally containing a specific vulnerability.
+    * Implemented vulnerabilities by the respective team members: 
+        * XSS (Cross-Site Scripting) - Artem Bulgakov
+        * Server-Side Request Forgery (SSRF) - Alexander Ryabov
+        * Path Traversal - Ruslan Belkov
+        * XXE (XML External Entity) - Mikhail Voronin
+        * SQL Injection - Eldar Mametov
 
-2.  **Индивидуальная проработка уязвимостей и правил Snort:**
-    *   Для каждой внедренной уязвимости (один Endpoint на каждого участника команды), ответственный участник разрабатывал специализированные правила для Snort V2.
-    *   Целью написанный правил является обнаружение популярных методов атак на их Endpoint и предотвращение этой атаки. 
+2.  **Individualized development of vulnerabilities and Snort rules:**
+    * For each vulnerability introduced (one Endpoint per team member), the responsible participant developed specialized rules for Snort V2.
+    * The purpose of the written rules is to detect popular attack methods on their Endpoint and prevent that attack. 
 
-3.  **Настройка инфраструктуры:**
-    *   Развертывание Snort V2 на vps на базе ubuntu 24.
-    *   Использование контейнеризации (Docker) для развертывания веб-приложения на FastAPI и написание Nginx конфигураций для корректной работы двух сайтов на одном vps-сервере. За конфигурацию контейнеров и Nginx отвечал Михаил Воронин.
-    *   Базовая конфигурация Snort, включая настройку сети и подключение правил, осуществлялась Эльдаром Маметовым.
+3.  **Infrastructure Setup:**
+    * Deploying Snort V2 on an ubuntu 24 based vps.
+    * Using containerization (Docker) to deploy a web application on FastAPI and writing Nginx configurations to run two sites correctly on the same vps server. Mikhail Voronin was responsible for container and Nginx configuration.
+    * Basic Snort configuration, including network setup and rules connection, was performed by Eldar Mametov.
 
-4.  **Дополнительное тестирование на Juice Shop:**
-    *   Для тестирования стандартных правил snort от комьюнити был дополнительно развернут juice-shop, который включает в себя множество уязвимостей и под него запущен отдельный snort.conf для тестирования его работы. 
+4.  **Additional testing on Juice Shop:**
+    * To test standard snort rules from the community, juice-shop, which includes many vulnerabilities, was additionally deployed and a separate snort.conf was run under it to test its operation. 
 
-## Результаты (Results)
+## Results
 
-*[Этот раздел должен быть заполнен по мере выполнения проекта. Опишите здесь, что *фактически* было достигнуто.]*
+Video demonstration: https://www.youtube.com/watch?v=ReR8faoU8bI
 
+Proprietary rules output: When creating rules, it is preferable to initially consider a service as a “black box” to cover more vulnerable cases, and then consider it as a “white box” to cover service-specific cases. In our case, knowing the set of attacks and corresponding vulnerabilities in advance, we were able to quickly write rules targeting the basic attack vectors. We note that the developed signatures cover only the simplest manually tested attacks and require further refinement and extension. The video shows that the vulnerabilities are no longer available. 
 
-## Обсуждение (Discussion)
+Conclusion on standard rules: Testing the standard rules on juice-shop has shown that you cannot focus only on the standard rules for detecting potential threats. You should write your own rules for snort, even if you need basic protection, because the standard rules do not provide it to the necessary extent. 
 
-В ходе выполнения проекта поставленные цели были успешно достигнуты: система Snort была развернута и настроена, а разработанные правила эффективно детектируют и предотвращают атаки на целевое веб-приложение. Все пять смоделированных уязвимостей (XSS, SSRF, Path Traversal, XXE и SQL-инъекция) надежно блокируются специально созданными сигнатурами. Дополнительное тестирование на OWASP Juice Shop с использованием стандартных правил сообщества также подтвердило работоспособность конфигурации и стабильность развернутой инфраструктуры.
+## Discussion
 
-**Ключевые выводы и результаты:**
+During the course of the project, the objectives were successfully achieved: the Snort system was deployed and configured, and the developed rules effectively detect and prevent attacks on the target web application. All five simulated vulnerabilities (XSS, SSRF, Path Traversal, XXE and SQL injection) are reliably blocked by the specially created signatures. Additional testing on the OWASP Juice Shop showed that the standard available snort rules work inefficiently and cannot protect the infrastructure from standard attacks, even at the IDS level.
 
-1.  **Эффективность кастомных правил:** Разработанные командой правила для Snort V2 продемонстрировали свою состоятельность в отражении базовых векторов атак. Этот процесс позволил участникам углубить понимание механизмов эксплуатации специфических уязвимостей и освоить практические навыки написания эффективных сигнатур для IDS/IPS.
-2.  **Практический опыт команды:** Каждый член команды успешно справился с индивидуальной задачей по созданию уязвимого эндпоинта и разработке соответствующего правила Snort, что способствовало коллективному росту компетенций в области сетевой безопасности.
-3.  **Выбор Snort V2:** Для данного учебного проекта функционала Snort V2 оказалось достаточно, и команда не столкнулась с существенными ограничениями. Однако стоит отметить, что для более сложных, высоконагруженных производственных сред актуальнее была бы Snort V3. Преимущества третьей версии, такие как возможность "горячей" перезагрузки правил без остановки сервиса, улучшенная масштабируемость и расширенные возможности для глубокого анализа трафика (включая подключение модулей для анализа прикладного уровня), делают ее более предпочтительной в реальных сценариях.
+**Key findings and results:**
 
-**Перспективы дальнейшего развития:**
+1.  **Effectiveness of custom rules:** The rules developed by the team for Snort V2 demonstrated their validity in repelling basic attack vectors. This process allowed participants to deepen their understanding of specific vulnerability exploitation mechanisms and learn practical skills for writing effective signatures for IDS/IPS.
+2.  **Practical Team Experience:** Each team member successfully completed the individual task of creating a vulnerable endpoint and developing the corresponding Snort rule, which contributed to the collective growth of network security competencies.
+3.  **Selection of Snort V2:** For this training project, the functionality of Snort V2 was sufficient and the team did not encounter any significant limitations. However, it should be noted that Snort V3 would have been more relevant for more complex, high-volume production environments. The advantages of the third version, such as the ability to hot reload rules without stopping the service, improved scalability, and enhanced capabilities for deep traffic analysis (including the connection of application layer analysis modules), make it more preferable in real-world scenarios.
 
-Если бы данный проект развивался в направлении защиты коммерческого продукта с активной пользовательской базой, фокус был бы смещен на следующие аспекты:
+**Prospects for further development:**
 
-*   **Расширение базы правил:** Не только создание правил, блокирующих однозначно вредоносные пакеты, но и разработка сигнатур для генерации предупреждений о подозрительной активности, требующей дополнительного анализа.
-*   **Мониторинг и аналитика:** Внедрение системы непрерывного мониторинга событий безопасности, сбор и анализ логов для выявления аномалий и паттернов атак.
-*   **Проактивное обновление правил:** Регулярное обновление существующих и написание новых правил на основе анализа актуальных угроз, бюллетеней безопасности и данных из фидов Threat Intelligence.
-*   **Интеграция с SIEM/SOAR:** Подключение Snort к системам управления информацией о безопасности и событиями (SIEM) для корреляции данных с другими источниками и, возможно, к платформам SOAR для автоматизации некоторых процессов реагирования.
-*   **Тестирование и оптимизация:** Постоянное тестирование эффективности правил (включая тесты на ложные срабатывания) и оптимизация производительности Snort для минимизации влияния на сетевой трафик.
+If this project were to evolve towards protecting a commercial product with an active user base, the focus would shift to the following aspects:
 
-В целом, проект позволил получить ценный практический опыт в развертывании, настройке и эксплуатации IDS/IPS системы, а также в разработке сигнатур для детектирования и предотвращения веб-атак.
+* **Rule Base Expansion:** Not only creating rules to block unambiguously malicious packets, but also developing signatures to generate warnings about suspicious activity that requires additional analysis.
+* **Monitoring and analytics:** Implement continuous monitoring of security events, collecting and analyzing logs to identify anomalies and attack patterns.
+* **Proactive Rule Updates:** Regularly update existing rules and write new rules based on analysis of current threats, security bulletins and data from Threat Intelligence feeds.
+* **Integration with SIEM/SOAR:** Connecting Snort to Security Information and Event Management (SIEM) systems to correlate data with other sources and possibly to SOAR platforms to automate some response processes.
+* **Testing and Optimization:** Ongoing testing of rule effectiveness (including false positive tests) and optimizing Snort performance to minimize impact on network traffic.
+
+Overall, the project provided valuable hands-on experience in deploying, configuring, and operating an IDS/IPS system, as well as developing signatures to detect and prevent web-based attacks.
