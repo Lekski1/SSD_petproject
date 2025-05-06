@@ -2,27 +2,28 @@
 # Test rules
 drop tcp any any -> $HOME_NET any (msg:"Тестовое правило"; content:"/sql_injection/?username="; content:"Eldar";nocase;http_uri; sid:1000001;rev:1;)
 # Detects common SQLi keywords (OR, UNION, etc.) and control chars (', --, ;)
-drop tcp any any -> $HOME_NET any (msg:"SQL Injection: Common Keywords in username URI";  pcre:"/username=[^&]*?(\%27|\'|\-\-|\%3b|\;|\b(OR|UNION|SELECT|INSERT|UPDATE|DELETE|DROP|EXEC|DECLARE|CAST|CONVERT|ALTER|CREATE|xp_cmdshell|information_schema)\b)/Ui"; sid:1000020; rev:2;)
+drop tcp any any -> $HOME_NET any (msg:"SQL Injection: Common Keywords in username URI";  pcre:"/username=[^&]*?(\%27|\'|\-\-|\%3b|\;|\b(OR|UNION|SELECT|INSERT|UPDATE|DELETE|DROP|EXEC|DECLARE|CAST|CONVERT|ALTER|CREATE|xp_cmdshell|information_schema)\b)/Ui"; sid:1000002; rev:2;)
 # Detects a specific SQLi tautology like " or "N"="N" -- (case-insensitive)
-drop tcp any any -> $HOME_NET any (msg:"SQL Injection: My Specific Rules"; content:"/sql_injection/?username="; http_uri; nocase; pcre:"/\"\s*or\s*\"\s*\w+\s*=\s*\w+\s*(?:--|#)/i"; sid:1000009; rev:1;)
+drop tcp any any -> $HOME_NET any (msg:"SQL Injection: My Specific Rules"; content:"/sql_injection/?username="; http_uri; nocase; pcre:"/\"\s*or\s*\"\s*\w+\s*=\s*\w+\s*(?:--|#)/i"; sid:1000003; rev:1;)
 # Detects a numeric SQLi tautology pattern like " or "1"="1" --
-drop tcp any any -> $HOME_NET any (msg:"SQL Injection: Pattern ' \"or \"N=N\"-- ' ";  pcre:"/username=[^&]*?(\%22|\")\s*or\s*(\%22|\")\d+\s*=\s*\d+(\%22|\")\s*(\-\-|\%2d\%2d)/Ui"; sid:1000024; rev:1;)
+drop tcp any any -> $HOME_NET any (msg:"SQL Injection: Pattern ' \"or \"N=N\"-- ' ";  pcre:"/username=[^&]*?(\%22|\")\s*or\s*(\%22|\")\d+\s*=\s*\d+(\%22|\")\s*(\-\-|\%2d\%2d)/Ui"; sid:1000004; rev:1;)
 # Detects SQLi tautologies like ' OR 'A'='A' or OR 1=1
-drop tcp any any -> $HOME_NET any (msg:"SQL Injection: Tautology like 1=1 "; pcre:"/username=[^&]*?((\%27|\')\s*(OR|AND)\s*(\%27|\')\w+(\%27|\')\s*=\s*(\%27|\')\w+(\%27|\')|\b(OR|AND)\b\s+\w+\s*=\s*\w+)/Ui"; sid:1000022; rev:2;)
+drop tcp any any -> $HOME_NET any (msg:"SQL Injection: Tautology like 1=1 "; pcre:"/username=[^&]*?((\%27|\')\s*(OR|AND)\s*(\%27|\')\w+(\%27|\')\s*=\s*(\%27|\')\w+(\%27|\')|\b(OR|AND)\b\s+\w+\s*=\s*\w+)/Ui"; sid:1000005; rev:2;)
 # Detects SQLi attempts using double quotes around expressions with '='
-drop tcp any any -> $HOME_NET any (msg:"SQL Injection: Quote Bypass "; pcre:"/username=[^&]*?(\%22|\").*(\%3d|\=).*(\%22|\")/Ui"; sid:1000023; rev:2;)
+drop tcp any any -> $HOME_NET any (msg:"SQL Injection: Quote Bypass "; pcre:"/username=[^&]*?(\%22|\").*(\%3d|\=).*(\%22|\")/Ui"; sid:1000006; rev:2;)
 # Detects anomalous repetition of "username" string within its own value
-drop tcp any any -> $HOME_NET any (msg:"SQL Injection: Pattern '/username=...username' ";  pcre:"/\/?username=.*?username/Ui"; sid:1000031; rev:2;)
+drop tcp any any -> $HOME_NET any (msg:"SQL Injection: Pattern '/username=...username' ";  pcre:"/\/?username=.*?username/Ui"; sid:1000007; rev:2;)
 
 # XXE
-drop tcp any any -> $HOME_NET any (msg:"XXE"; content:"POST"; http_method; content:"/xxe/"; http_uri; content:"<!ENTITY"; nocase; pcre:"/<!ENTITY\s+\S+\s+SYSTEM\s*[\"\'][^\"\']/i"; sid:1000110; rev:1;)
+drop tcp any any -> $HOME_NET any (msg:"XXE"; content:"POST"; http_method; content:"/xxe/"; http_uri; content:"<!ENTITY"; nocase; pcre:"/<!ENTITY\s+\S+\s+SYSTEM\s*[\"\'][^\"\']/i"; sid:2000001; rev:1;)
 
 # SSRF
-drop tcp any any -> $HOME_NET any (msg:"POLICY SSRF ?url= blocked"; content:"GET", http_method; content: "/ssrf/"; http_uri; content:"?url="; nocase; sid:1000009; rev:1;)
+drop tcp any any -> $HOME_NET any (msg:"POLICY SSRF ?url= blocked"; content:"GET", http_method; content: "/ssrf/"; http_uri; content:"?url="; nocase; sid:3000001; rev:1;)
 
 # XSS
-drop tcp any any -> $HOME_NET any (msg:"XSS blocked"; content:"GET"; http_method; content:"/xss/"; http_uri; content:"<script"; nocase; pcre:"/(\<script.*?\>.*?\<\/script\>)|((on\w+\s*=\s*['\"]?javascript:)|javascript:)/Ui"; http_uri; sid:1000150; rev:1;)
+drop tcp any any -> $HOME_NET any (msg:"XSS blocked"; content:"GET"; http_method; content:"/xss/"; http_uri; content:"<script"; nocase; pcre:"/(\<script.*?\>.*?\<\/script\>)|((on\w+\s*=\s*['\"]?javascript:)|javascript:)/Ui"; http_uri; sid:4000001; rev:1;)
 
 # Path Traversal
-drop tcp any any -> $HOME_NET any (msg:"PATH_TRAVERSAL - Directory traversal attempt"; flow:to_server; content:"GET"; http_method; content:"/path_traversal/view"; http_uri; content:"file="; pcre:"/file=[^&]*(\.\.\/|\.\.\\|%2e%2e)/i"; sid:1000160; rev:1; metadata:service http;)
-drop tcp any any -> $HOME_NET any (msg:"PATH_TRAVERSAL - Directory traversal attempt - Literal .. and Encoded Slash"; flow:to_server; content:"GET"; http_method; content:"/path_traversal/view"; http_uri; content:"file="; http_uri; pcre:"/file=[^&]*\.\.(?:%2f|%5c)/i"; sid:1000161; rev:1; metadata:service http;)
+drop tcp any any -> $HOME_NET any (msg:"PATH_TRAVERSAL - Directory traversal attempt"; flow:to_server; content:"GET"; http_method; content:"/path_traversal/view"; http_uri; content:"file="; pcre:"/file=[^&]*(\.\.\/|\.\.\\|%2e%2e)/i"; sid:5000001; rev:1; metadata:service http;)
+drop tcp any any -> $HOME_NET any (msg:"PATH_TRAVERSAL - Directory traversal attempt - Literal .. and Encoded Slash"; flow:to_server; content:"GET"; http_method; content:"/path_traversal/view"; http_uri; content:"file="; http_uri; pcre:"/file=[^&]*\.\.(?:%2f|%5c)/i"; sid:5000002; rev:1; metadata:service http;)
+drop tcp any any -> $HOME_NET any (msg:"ALERT - Direct access attempt to /etc/passwd in URI"; flow:to_server; content:"/etc/passwd"; http_uri; classtype:web-application-attack; sid:5000003; rev:1; metadata:service http;)
