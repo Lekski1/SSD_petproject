@@ -58,6 +58,10 @@ Snort version 2 was selected as the IDS/IPS. It was chosen for the following rea
 
 ## Methods
 
+![Описание](image-1.png)  
+*The system architecture*
+
+
 To implement the project, we used a vps server on which we deployed all the necessary components for testing our project 
 
 1.  **Development of target web application on FastAPI:**
